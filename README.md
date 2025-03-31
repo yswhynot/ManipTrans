@@ -15,7 +15,7 @@ ______________________________________________________________________
 
 
 <p align="center">
-    <a href="https://arxiv.org">
+    <a href="https://arxiv.org/abs/2503.21860">
         <img src='https://img.shields.io/badge/Paper-red?style=for-the-badge&labelColor=B31B1B&color=B31B1B' alt='Paper PDF'></a>
     <a href='https://maniptrans.github.io/'>
         <img src='https://img.shields.io/badge/Project-orange?style=for-the-badge&labelColor=D35400' alt='Project Page'></a>
