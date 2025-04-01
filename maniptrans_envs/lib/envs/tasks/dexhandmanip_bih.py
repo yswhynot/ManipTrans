@@ -35,12 +35,6 @@ from ...envs.core.vec_task import VecTask
 from ...utils.pose_utils import get_mat
 
 
-class Stage(Enum):
-    PREPARE = 0
-    EXECUTE = 1
-    FINISH = 2
-
-
 def soft_clamp(x, lower, upper):
     return lower + torch.sigmoid(4 / (upper - lower) * (x - (lower + upper) / 2)) * (upper - lower)
 
@@ -130,19 +124,11 @@ class DexHandManipBiHEnv(VecTask):
         self._eef_rf_state = None  # end effector state (at left fingertip)
         self._j_eef = None  # Jacobian for end effector
         self._mm = None  # Mass matrix
-        self._arm_control = None  # Tensor buffer for controlling arm
-        self._gripper_control = None  # Tensor buffer for controlling gripper
         self._pos_control = None  # Position actions
         self._effort_control = None  # Torque actions
         self._dexhand_rh_effort_limits = None  # Actuator effort limits for dexhand_r
         self._dexhand_rh_dof_speed_limits = None  # Actuator speed limits for dexhand_r
         self._global_dexhand_rh_indices = None  # Unique indices corresponding to all envs in flattened array
-        self._global_furniture_part_indices = {}
-
-        self._front_wall_idxs = None
-        self._left_wall_idxs = None
-        self._right_wall_idxs = None
-        self._fparts_idxs = None
 
         self.sim_device = torch.device(sim_device)
         super().__init__(

@@ -67,6 +67,7 @@ ______________________________________________________________________
     pip install fvcore~=0.1.5
     pip install --no-index --no-cache-dir pytorch3d==0.7.3 -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu117_pyt1131/download.html
     pip install -r requirements.txt
+    pip install -e . # include the current directory in the Python path. Or use: `export PYTHONPATH=.:$PYTHONPATH`
     pip install numpy==1.23.5 # downgrade numpy to 1.23.5 to avoid compatibility issues
     ```
 
@@ -244,22 +245,23 @@ ______________________________________________________________________
     Preprocess data for both hands:
     ```bash
     # for Inspire Hand
-    python main/dataset/mano2dexhand.py --data_idx 476@0 --side right --dexhand inspire --headless --iter 7000
-    python main/dataset/mano2dexhand.py --data_idx 476@0 --side left --dexhand inspire --headless --iter 7000
+    python main/dataset/mano2dexhand.py --data_idx 20aed@0 --side right --dexhand inspire --headless --iter 7000
+    python main/dataset/mano2dexhand.py --data_idx 20aed@0 --side left --dexhand inspire --headless --iter 7000
     # for other hands, just replace `inspire` with the corresponding hand name
     ```
+    Regarding `data_idx` of OakInk V2, for example, `20aed@0` refers to the primitive task indexed at 0 in the sequence labeled `scene_03__A004++seq__20aed35da30d4b869590__2023-04-22-18-45-27` (for simplification, we only use the first 5 digits of the hash code).
 
 2. **Training**
   Train bi-manual policies:
     ```bash
-    python main/rl/train.py task=ResDexHand dexhand=inspire side=BiH headless=true num_envs=4096 learning_rate=2e-4 test=false randomStateInit=true dataIndices=[476@0] rh_base_model_checkpoint=assets/imitator_rh_inspire.pth lh_base_model_checkpoint=assets/imitator_lh_inspire.pth early_stop_epochs=1000 actionsMovingAverage=0.4 experiment=cross_476@0_inspire
+    python main/rl/train.py task=ResDexHand dexhand=inspire side=BiH headless=true num_envs=4096 learning_rate=2e-4 test=false randomStateInit=true dataIndices=[20aed@0] rh_base_model_checkpoint=assets/imitator_rh_inspire.pth lh_base_model_checkpoint=assets/imitator_lh_inspire.pth early_stop_epochs=1000 actionsMovingAverage=0.4 experiment=cross_20aed@0_inspire
     ```
     Similar to single-hand training, the `early_stop_epochs` parameter can be adjusted based on the task complexity.
 
 3. **Test**
   Test the bi-manual policy:
     ```bash
-    python main/rl/train.py task=ResDexHand dexhand=inspire side=BiH headless=false num_envs=4 learning_rate=2e-4 test=true randomStateInit=false dataIndices=[476@0] rh_base_model_checkpoint=assets/imitator_rh_inspire.pth lh_base_model_checkpoint=assets/imitator_lh_inspire.pth actionsMovingAverage=0.4 checkpoint=runs/cross_476@0_inspire__xxxxxx/nn/cross_476@0_inspire.pth
+    python main/rl/train.py task=ResDexHand dexhand=inspire side=BiH headless=false num_envs=4 learning_rate=2e-4 test=true randomStateInit=false dataIndices=[20aed@0] rh_base_model_checkpoint=assets/imitator_rh_inspire.pth lh_base_model_checkpoint=assets/imitator_lh_inspire.pth actionsMovingAverage=0.4 checkpoint=runs/cross_20aed@0_inspire__xxxxxx/nn/cross_20aed@0_inspire.pth
     ```
 
 ---

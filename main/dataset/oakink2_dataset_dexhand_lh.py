@@ -52,6 +52,8 @@ class OakInk2DatasetDexHandLH(ManipData):
         pathes = [os.path.join(data_dir, "anno_preview", p) for p in pathes]
         pathes.sort(key=lambda x: x.split("/")[-1])
         self.data_pathes = pathes
+        # * We use the first 5 digits of hash as the index
+        self.seq_hashes = {os.path.split(p)[-1].split("_")[5][:5]: i for i, p in enumerate(pathes)}
 
         SMPLX_ROT_MODE = "quat"
         SMPLX_DIM_SHAPE_ALL = 300
@@ -72,12 +74,15 @@ class OakInk2DatasetDexHandLH(ManipData):
     def __getitem__(self, index):
 
         if type(index) == str:
-            index = tuple(map(int, index.split("@")))
+            index = (index.split("@")[0], int(index.split("@")[1]))
 
         assert (
-            type(index) == tuple and len(index) == 2 and type(index[0]) == int and type(index[1]) == int
+            type(index) == tuple and len(index) == 2 and type(index[0]) == str and type(index[1]) == int
         ), "index error"
-        idx = index[0]
+        assert (
+            index[0] in self.seq_hashes
+        ), f"index {index[0]} not found, please check the 5 digits hash (first 5 digits of the sequence hash) in the data_pathes"
+        idx = self.seq_hashes[index[0]]
         stage = index[1]
 
         anno = self.data_pathes[idx]
@@ -172,7 +177,6 @@ class OakInk2DatasetDexHandLH(ManipData):
         wrist_rot = smplx_results.transform_abs[:, 20, :3, :3].detach() @ torch.tensor(
             np.repeat(mano_rot_offset[None], smplx_results.transform_abs.shape[0], axis=0), device=self.device
         )
-        
 
         obj_mesh = load_obj_map(os.path.join(self.data_dir, "object_preview", "align_ds"), object_list)
         obj_id = program_info_selected["obj_list_lh"][0]

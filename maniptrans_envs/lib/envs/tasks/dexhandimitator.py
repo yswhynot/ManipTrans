@@ -121,19 +121,11 @@ class DexHandImitatorRHEnv(VecTask):
         self._eef_rf_state = None  # end effector state (at left fingertip)
         self._j_eef = None  # Jacobian for end effector
         self._mm = None  # Mass matrix
-        self._arm_control = None  # Tensor buffer for controlling arm
-        self._gripper_control = None  # Tensor buffer for controlling gripper
         self._pos_control = None  # Position actions
         self._effort_control = None  # Torque actions
         self._dexhand_effort_limits = None  # Actuator effort limits for dexhand
         self._dexhand_dof_speed_limits = None  # Actuator speed limits for dexhand
         self._global_dexhand_indices = None  # Unique indices corresponding to all envs in flattened array
-        self._global_furniture_part_indices = {}
-
-        self._front_wall_idxs = None
-        self._left_wall_idxs = None
-        self._right_wall_idxs = None
-        self._fparts_idxs = None
 
         self.sim_device = torch.device(sim_device)
         super().__init__(
