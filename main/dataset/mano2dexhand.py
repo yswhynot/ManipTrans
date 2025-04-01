@@ -480,6 +480,7 @@ if __name__ == "__main__":
             device="cuda:0",
             mujoco2gym_transf=torch.eye(4, device="cuda:0"),
             dexhand=dexhand,
+            verbose=False,
         )
 
         demo_data = pack_data([demo_d[idx]], dexhand)

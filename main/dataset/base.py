@@ -21,6 +21,7 @@ class ManipData(Dataset, ABC):
         mujoco2gym_transf=None,
         max_seq_len=int(1e10),
         dexhand=None,
+        verbose=True,
         **kwargs,
     ):
         self.data_dir = data_dir
@@ -30,6 +31,8 @@ class ManipData(Dataset, ABC):
 
         self.dexhand = dexhand
         self.device = device
+
+        self.verbose = verbose
 
         # ? modify this depending on the origin point
         self.transf_offset = torch.eye(4, dtype=torch.float32, device=mujoco2gym_transf.device)
@@ -161,11 +164,13 @@ class ManipData(Dataset, ABC):
 
     def load_retargeted_data(self, data, retargeted_data_path):
         if not os.path.exists(retargeted_data_path):
-            cprint(f"\nWARNING: {retargeted_data_path} does not exist.", "red")
-            cprint(f"WARNING: This may lead to a slower transfer process or even failure to converge.", "red")
-            cprint(
-                f"WARNING: It is recommended to first execute the retargeting code to obtain initial values.\n", "red"
-            )
+            if self.verbose:
+                cprint(f"\nWARNING: {retargeted_data_path} does not exist.", "red")
+                cprint(f"WARNING: This may lead to a slower transfer process or even failure to converge.", "red")
+                cprint(
+                    f"WARNING: It is recommended to first execute the retargeting code to obtain initial values.\n",
+                    "red",
+                )
             data.update(
                 {
                     "opt_wrist_pos": data["wrist_pos"],
