@@ -249,7 +249,7 @@ ______________________________________________________________________
     python main/dataset/mano2dexhand.py --data_idx 20aed@0 --side left --dexhand inspire --headless --iter 7000
     # for other hands, just replace `inspire` with the corresponding hand name
     ```
-    Regarding `data_idx` of OakInk V2, for example, `20aed@0` refers to the primitive task indexed at 0 in the sequence labeled `scene_03__A004++seq__20aed35da30d4b869590__2023-04-22-18-45-27` (for simplification, we only use the first 5 digits of the hash code).
+    Regarding `data_idx` of OakInk V2, for example, `20aed@0` refers to the primitive task indexed at `0` in the sequence labeled `scene_03__A004++seq__20aed35da30d4b869590__2023-04-22-18-45-27` (for simplification, we only use the first 5 digits of the hash code).
 
 2. **Training**
   Train bi-manual policies:

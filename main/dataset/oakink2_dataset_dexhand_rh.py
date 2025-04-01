@@ -115,6 +115,10 @@ class OakInk2DatasetDexHandRH(ManipData):
             else:
                 assert False, f"no intersection between {lst1} and {lst2}"
 
+        assert (
+            right_hand_range is not None
+        ), f"Right hand data is empty. Please check if {index} is a left-hand-only task."
+
         if left_hand_range is not None:
             right_hand_range = intersection(left_hand_range, right_hand_range)
 
