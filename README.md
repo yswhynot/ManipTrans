@@ -322,7 +322,7 @@ Our paper is posted on CVPR25. If you find our work useful, please consider citi
   @inproceedings{li2025maniptrans,
     title={ManipTrans: Efficient Dexterous Bimanual Manipulation Transfer via Residual Learning},
     author={Li, Kailin and Li, Puhao and Liu, Tengyu and Li, Yuyang and Huang, Siyuan},
-    booktitle=CVPR,
+    booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
     year={2025}
   }
 ```
