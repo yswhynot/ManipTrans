@@ -19,8 +19,8 @@ ______________________________________________________________________
         <img src='https://img.shields.io/badge/Paper-red?style=for-the-badge&labelColor=B31B1B&color=B31B1B' alt='Paper PDF'></a>
     <a href='https://maniptrans.github.io/'>
         <img src='https://img.shields.io/badge/Project-orange?style=for-the-badge&labelColor=D35400' alt='Project Page'></a>
-    <a href='https://huggingface.co/'>
-        <img src='https://img.shields.io/badge/Dataset(uploading)-orange?style=for-the-badge&labelColor=FFD21E&color=FFD21E' alt='Dataset'></a>
+    <a href='https://huggingface.co/datasets/LiKailin/DexManipNet'>
+        <img src='https://img.shields.io/badge/Dataset-orange?style=for-the-badge&labelColor=FFD21E&color=FFD21E' alt='Dataset'></a>
     <!-- <a href=""><img alt="youtube views" src="https://img.shields.io/badge/Video-red?style=for-the-badge&logo=youtube&labelColor=ce4630&logoColor=red"/></a> -->
     
 </p>
@@ -36,9 +36,10 @@ ______________________________________________________________________
 3. [Usage](#usage)
 4. [🤗 Extending to New Hand-Object Datasets 🤗](#extending-to-new-hand-object-datasets)
 5. [🤗 Extending to New Dexterous Hand URDF Files 🤗](#extending-to-new-dexterous-hand-urdf-files)
-6. [Check out Our Paper](#check-out-our-paper)
-7. [Acknowledgement](#acknowledgement)
-8. [License](#license)
+6. [DexManipNet Dataset](#DexManipNet)
+7. [Check out Our Paper](#check-out-our-paper)
+8. [Acknowledgement](#acknowledgement)
+9. [License](#license)
 
 ---
 
@@ -274,7 +275,7 @@ ______________________________________________________________________
 
 We highly encourage researchers to transfer their hand-object datasets to dexterous hands using ManipTrans, contributing to the growth and development of the embodied AI community.
 
-To facilitate this, we provide a straightforward interface to help you quickly adapt new datasets. Please refer to the examples in `main/dataset/grab_dataset_dexhand.py` and `main/dataset/oakink2_dataset_dexhand_rh.py`. Follow these steps:
+To facilitate this, we provide a straightforward interface to help you quickly adapt new datasets. Please refer to the examples in `main/dataset/grab_dataset_dexhand.py` and `main/dataset/oakink2_dataset_dexhand_rh.py`. It is worth mentioning that our codebase is designed for 60 FPS data. If your dataset has a lower or higher FPS, please preprocess your data; otherwise, the transfer effect may not be optimal. Please follow these steps:
 
 1. Ensure your dataset's dataloader inherits from the `ManipData` class.  
 2. Implement the `__getitem__` method in your dataloader. Ensure the returned dictionary includes the following keys:  
@@ -312,6 +313,73 @@ To assist with this, we provide a simple interface that allows you to quickly ad
    - `relative_translation`: The translation of the dexterous hand’s wrist relative to the MANO wrist. If the wrist position in the URDF is at the origin, set `relative_translation` to `0`.  
 
 After completing this configuration, you should be able to use ManipTrans with your custom-designed dexterous hand 🤗. If you encounter any issues, feel free to contact us for support. We also encourage you to share your URDF files with the community to help advance research and development in dexterous manipulation.
+
+## 📦 `DexManipNet` Dataset
+<a id="DexManipNet"></a>
+<details>
+<summary>Steps:</summary>
+
+1. Download the `DexManipNet` dataset from the [official website](https://huggingface.co/datasets/LiKailin/DexManipNet) and extract it into the `data/dexmanipnet` directory.
+
+2. For the OakInk V2 dataset, create a symbolic link from the `coacd_object_preview` directory to `data/dexmanipnet/dexmanipnet_oakinkv2/ObjURDF`, which is required for loading the URDF files. (Please refer to the [Prerequisites](#Prerequisites) section for details on generating the COACD files.)
+
+    For the FAVOR dataset, we already provide the URDF files in `data/dexmanipnet/dexmanipnet_favor/ObjURDF`.
+
+    After setup, your directory structure should resemble the following:
+    ```
+    dexmanipnet
+    ├── dexmanipnet_favor
+    │   ├── ObjURDF
+    │   │   ├── OakInkObjectsV2
+    │   │   └── OakInkVirtualObjectsV2
+    │   └── sequences
+    └── dexmanipnet_oakinkv2
+        ├── oakinkv2_val_list.json
+        ├── ObjURDF -> ../../OakInk-v2/coacd_object_preview
+        │   ├── align_ds
+        │   └── obj_desc.json
+        └── sequences
+    ```
+
+3. To visualize the dataset, run the following example commands:
+    ```bash
+    # For FAVOR dataset:
+    python DexManipNet/vis_dataset.py --idx 1093 --side rh --source favor
+
+    # For OakInk V2 dataset:
+    python DexManipNet/vis_dataset.py --idx 267 --side bih --source oakinkv2
+    ```
+
+    Detailed descriptions and task names can be found in the `seq_info.json` file within each sequence directory.
+
+4. If you find our dataset `DexManipNet` helpful, please also consider citing OakInk V2 and FAVOR to acknowledge their contributions:
+    <details>
+    <summary>OakInk V2</summary>
+
+    ```bibtex
+        @inproceedings{zhan2024oakink2,
+            title={Oakink2: A dataset of bimanual hands-object manipulation in complex task completion},
+            author={Zhan, Xinyu and Yang, Lixin and Zhao, Yifei and Mao, Kangrui and Xu, Hanlin and Lin, Zenan and Li, Kailin and Lu, Cewu},
+            booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+            year={2024}
+        }
+    ```
+    </details>
+
+    <details>
+    <summary>FAVOR</summary>
+
+    ```bibtex
+        @inproceedings{li2024favor,
+            title={FAVOR: Full-body ar-driven virtual object rearrangement guided by instruction text},
+            author={Li, Kailin and Yang, Lixin and Lin, Zenan and Xu, Jian and Zhan, Xinyu and Zhao, Yifei and Zhu, Pengxiang and Kang, Wenxiong and Wu, Kejian and Lu, Cewu},
+            booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+            year={2024}
+        }
+    ```
+    </details>
+
+</details>
 
 
 ## 📄 Check out Our Paper
