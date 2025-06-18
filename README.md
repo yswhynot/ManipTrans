@@ -388,9 +388,9 @@ Our paper is posted on CVPR25. If you find our work useful, please consider citi
 
 ```bibtex
   @inproceedings{li2025maniptrans,
-    title={ManipTrans: Efficient Dexterous Bimanual Manipulation Transfer via Residual Learning},
+    title={Maniptrans: Efficient dexterous bimanual manipulation transfer via residual learning},
     author={Li, Kailin and Li, Puhao and Liu, Tengyu and Li, Yuyang and Huang, Siyuan},
-    booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+    booktitle={Proceedings of the Computer Vision and Pattern Recognition Conference},
     year={2025}
   }
 ```
