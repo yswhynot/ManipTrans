@@ -241,6 +241,10 @@ if __name__ == "__main__":
     for p in mesh_parts:
         # p.visual.vertex_colors[:, :3] = (np.random.rand(3) * 255).astype(np.uint8)
         scene.add_geometry(p)
+    # create a directory for the output file if it does not exist
+    output_dir = os.path.dirname(output_file)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     scene.export(output_file)
     print("Exported to", output_file)
     open(output_file + ".done", "w").close() # touch done file
