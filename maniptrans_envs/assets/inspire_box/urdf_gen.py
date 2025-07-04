@@ -10,6 +10,7 @@ import os
 import copy
 import numpy as np
 import argparse
+from scipy.spatial.transform import Rotation
 
 def create_box_geometry(size):
     """Create a box geometry element with given size."""
@@ -18,7 +19,22 @@ def create_box_geometry(size):
     box.set('size', size)
     return geometry
 
-def replace_mesh_with_box(element, box_size, offset=None):
+def rotation_matrix_from_rpy(roll, pitch, yaw):
+    r = Rotation.from_euler('xyz', [roll, pitch, yaw])
+    return r.as_matrix() 
+
+def get_translate_then_rotate_origin(translation, rotation_rpy):
+    """Convert translate-then-rotate to URDF's rotate-then-translate format."""
+    # Convert rpy to rotation matrix
+    roll, pitch, yaw = rotation_rpy
+    R = rotation_matrix_from_rpy(roll, pitch, yaw)
+    
+    # Calculate the equivalent translation
+    t_prime = R @ np.array(translation)
+    
+    return t_prime.tolist(), rotation_rpy
+
+def replace_mesh_with_box(element, box_size, offset=None, rpy=None):
     """Replace mesh geometry with box geometry in a visual or collision element."""
     geometry = element.find('geometry')
     if geometry is not None:
@@ -34,6 +50,17 @@ def replace_mesh_with_box(element, box_size, offset=None):
             else:
                 box.set('size', box_size)
     
+
+    if rpy is not None and rpy != [0, 0, 0]:
+        origin = element.find('origin')
+        if origin is None:
+            origin = ET.SubElement(element, 'origin')
+            origin.set('xyz', '0 0 0')
+            origin.set('rpy', '0 0 0')
+        origin.set('rpy', ' '.join(map(lambda x: f'{x:.4f}', rpy)))
+
+        offset, rpy = get_translate_then_rotate_origin(offset, rpy)
+
     # Update origin if offset is provided
     if offset is not None and offset != [0, 0, 0]:
         origin = element.find('origin')
@@ -42,7 +69,7 @@ def replace_mesh_with_box(element, box_size, offset=None):
             origin.set('xyz', '0 0 0')
             origin.set('rpy', '0 0 0')
         
-        origin.set('xyz', ' '.join(map(str, offset)))
+        origin.set('xyz', ' '.join(map(lambda x: f'{x:.4f}', offset)))
 
 def replace_sphere_with_box(element, box_size):
     """Replace sphere geometry with box geometry in a visual element."""
@@ -52,7 +79,6 @@ def replace_sphere_with_box(element, box_size):
         if sphere is not None:
             # change sphere size to match box size
             sphere.set('radius', str(1.2 * box_size[0] / 2))
-
 
 def parse_xyz(xyz_str):
     """Parse xyz string to list of floats."""
@@ -71,7 +97,9 @@ def calculate_joint_distance(joint):
 def get_link_box_size_and_offset(link_name, joints, box_config):
     """Calculate box size and origin offset for a link based on joint distances."""
     if 'base_link' in link_name:
-        return box_config['palm'], [0, 0, 0]
+        offset = (-np.array(box_config['palm'])/2)
+        offset[2] = 0
+        return box_config['palm'], offset.tolist()
     
     # Find joints that connect to this link
     connected_joints = []
@@ -110,6 +138,30 @@ def get_link_box_size_and_offset(link_name, joints, box_config):
     else:
         return box_config['finger'], [0, 0, 0]
 
+def get_link_rpy(link_name, joints):
+    """Get the orientation of a link based on its joint direction."""
+    for joint in joints:
+        parent_link = joint.find('parent')
+        if parent_link is not None and parent_link.get('link') == link_name:
+            xyz = np.array(parse_xyz(joint.find('origin').get('xyz')))
+            if np.linalg.norm(xyz) == 0:
+                return [0, 0, 0]
+            
+            # Normalize the direction vector
+            direction = xyz / np.linalg.norm(xyz)
+            
+            # Calculate yaw (rotation around Z-axis)
+            yaw = np.arctan2(direction[1], direction[0]) + np.pi/2
+            
+            # Calculate pitch (rotation around Y-axis)
+            pitch = np.arcsin(-direction[2])
+            
+            # Calculate roll (rotation around X-axis) - usually 0 for finger joints
+            roll = 0.0
+            
+            return [roll, pitch, yaw]
+    return [0, 0, 0]
+
 def generate_urdf_with_boxes(input_urdf_path, output_urdf_path, box_config):
     """
     Generate URDF with box geometries replacing all meshes and spheres.
@@ -141,11 +193,14 @@ def generate_urdf_with_boxes(input_urdf_path, output_urdf_path, box_config):
         
         # Calculate box size and offset based on joint distances
         box_size, offset = get_link_box_size_and_offset(link_name, joints, box_config)
+        rpy = [0, 0, 0]
+        if 'thumb' in link_name:
+            rpy = get_link_rpy(link_name, joints)
         
         # Replace visual geometry
         visual = link.find('visual')
         if visual is not None:
-            replace_mesh_with_box(visual, box_size, offset)
+            replace_mesh_with_box(visual, box_size, offset, rpy)
             # Keep original sphere for tips
             if 'tip' in link_name:
                 replace_sphere_with_box(visual, box_size)
@@ -155,7 +210,7 @@ def generate_urdf_with_boxes(input_urdf_path, output_urdf_path, box_config):
         # Replace collision geometry
         collision = link.find('collision')
         if collision is not None:
-            replace_mesh_with_box(collision, box_size, offset)
+            replace_mesh_with_box(collision, box_size, offset, rpy)
             # Keep original sphere for tips
             if 'tip' in link_name:
                 replace_sphere_with_box(collision, box_size)
@@ -206,7 +261,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         # Default configuration
         box_config = {
-            'palm': [0.1, 0.05, 0.08],
+            'palm': [0.01, 0.1, 0.05],
             'finger': [0.01, 0.05, 0.01],
         }
         
@@ -216,4 +271,4 @@ if __name__ == "__main__":
         
         generate_urdf_with_boxes(input_path, output_path, box_config)
     else:
-        main() 
+        main()
