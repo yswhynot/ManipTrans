@@ -78,7 +78,7 @@ def replace_sphere_with_box(element, box_size):
         sphere = geometry.find('sphere')
         if sphere is not None:
             # change sphere size to match box size
-            sphere.set('radius', str(1.2 * box_size[0] / 2))
+            sphere.set('radius', str(1.4 * box_size[0] / 2))
 
 def parse_xyz(xyz_str):
     """Parse xyz string to list of floats."""
@@ -229,7 +229,16 @@ def generate_urdf_with_boxes(input_urdf_path, output_urdf_path, box_config):
             origin = joint.find('origin')
             if origin is not None:
                 xyz = parse_xyz(origin.get('xyz'))
-                origin.set('xyz', f'{-box_config["finger"][0] / 2} {xyz[1]} {-box_config["finger"][2] / 2}')
+                
+                if 'thumb' not in joint_name:
+                    origin.set('xyz', f'{-box_config["finger"][0] / 2} {xyz[1]} {-box_config["finger"][2] / 2}')
+                else:
+                    xyz = np.array(xyz)
+                    # offset the origin by half the box size in the sphere local frame
+                    xyz[0] -= 0.005
+                    xyz[1] -= 0.004
+                    xyz[2] += 0.003
+                    origin.set('xyz', f'{xyz[0]:.4f} {xyz[1]:.4f} {xyz[2]:.4f}')
     
     # Write the modified URDF
     tree.write(output_urdf_path, encoding='utf-8', xml_declaration=True)
