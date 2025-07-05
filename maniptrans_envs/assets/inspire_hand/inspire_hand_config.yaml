@@ -1,0 +1,208 @@
+# Inspire Hand URDF Configuration
+# This file specifies the dimensions and properties for generating the Inspire hand URDF
+
+# Robot name
+robot_name: "h1_box"
+
+# Hand side (R_ for right hand, L_ for left hand)
+hand_side: "R_"
+
+# Box dimensions for each link type
+box_dimensions:
+  # Base link (hand base)
+  hand_base:
+    width: 0.01    # x dimension
+    length: 0.1    # y dimension  
+    height: 0.05   # z dimension
+    mass: 0.14143
+    # Visual/collision origin offset (xyz, rpy)
+    visual_origin: [-0.0050, -0.0500, 0.0000, 0, 0, 0]
+
+  # Thumb links
+  thumb_proximal_base:
+    width: 0.01
+    length: 0.016787272024066328
+    height: 0.01
+    mass: 0.0018869
+    visual_origin: [0.0001, 0.0109, -0.0014, 0.0000, 0.5836, 3.8217]
+
+  thumb_proximal:
+    width: 0.01
+    length: 0.056006380966814845
+    height: 0.01
+    mass: 0.0066075
+    visual_origin: [0.0252, 0.0133, -0.0049, 0.0000, 0.0143, 2.2357]
+
+  thumb_intermediate:
+    width: 0.01
+    length: 0.02268404373122217
+    height: 0.01
+    mass: 0.0037847
+    visual_origin: [0.0125, 0.0004, -0.0047, 0.0000, 0.0529, 2.0357]
+
+  thumb_distal:
+    width: 0.01
+    length: 0.023078574950895474
+    height: 0.01
+    mass: 0.0033441
+    visual_origin: [0.0125, 0.0037, -0.0035, 0.0000, 0.2626, 2.3466]
+
+  # Finger proximal links (index, middle, ring, pinky)
+  finger_proximal:
+    width: 0.01
+    length: 0.03214803454972014
+    height: 0.01
+    mass: 0.0042403
+    visual_origin: [-0.0050, 0.0161, -0.0050, 0, 0, 0]
+
+  # Finger intermediate links
+  index_intermediate:
+    width: 0.01
+    length: 0.04379631116135011
+    height: 0.01
+    mass: 0.0045683
+    visual_origin: [-0.0050, 0.0219, -0.0050, 0, 0, 0]
+
+  middle_intermediate:
+    width: 0.01
+    length: 0.04706433173139187
+    height: 0.01
+    mass: 0.0050396
+    visual_origin: [-0.0050, 0.0235, -0.0050, 0, 0, 0]
+
+  ring_intermediate:
+    width: 0.01
+    length: 0.04379633523392682
+    height: 0.01
+    mass: 0.0045683
+    visual_origin: [-0.0050, 0.0219, -0.0050, 0, 0, 0]
+
+  pinky_intermediate:
+    width: 0.01
+    length: 0.03671467408620836
+    height: 0.01
+    mass: 0.0035996
+    visual_origin: [-0.0050, 0.0184, -0.0050, 0, 0, 0]
+
+# Tip sphere radius (same for all tips)
+tip_radius: 0.007
+
+# Joint limits and properties
+joint_properties:
+  # Thumb joints
+  thumb_proximal_yaw:
+    lower: -0.1
+    upper: 1.3
+    effort: 1
+    velocity: 0.5
+    origin: [-0.01696, -0.0691, -0.02045, 1.5708, -1.5708, 0]
+    axis: [0, 0, -1]
+
+  thumb_proximal_pitch:
+    lower: 0.0
+    upper: 0.5
+    effort: 1
+    velocity: 0.5
+    origin: [-0.0088099, 0.010892, -0.00925, 1.5708, 0, 2.8587]
+    axis: [0, 0, 1]
+
+  thumb_intermediate:
+    lower: 0
+    upper: 0.8
+    effort: 1
+    velocity: 0.5
+    origin: [0.04407, 0.034553, -0.0008, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "thumb_proximal_pitch"
+    mimic_multiplier: 1.6
+
+  thumb_distal:
+    lower: 0
+    upper: 1.2
+    effort: 1
+    velocity: 0.5
+    origin: [0.020248, 0.010156, -0.0012, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "thumb_proximal_pitch"
+    mimic_multiplier: 2.4
+
+  # Finger joints
+  index_proximal:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0.00028533, -0.13653, -0.032268, -3.1067, 0, 0]
+    axis: [0, 0, 1]
+
+  index_intermediate:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0, 0.032026, 0, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "index_proximal"
+    mimic_multiplier: 1
+
+  middle_proximal:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0.00028533, -0.1371, -0.01295, -3.1416, 0, 0]
+    axis: [0, 0, 1]
+
+  middle_intermediate:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0, 0.032041, 0, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "middle_proximal"
+    mimic_multiplier: 1
+
+  ring_proximal:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0.00028533, -0.13691, 0.0062872, 3.0892, 0, 0]
+    axis: [0, 0, 1]
+
+  ring_intermediate:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0, 0.032041, 0, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "ring_proximal"
+    mimic_multiplier: 1
+
+  pinky_proximal:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0.00028533, -0.13571, 0.025488, 3.0369, 0, 0]
+    axis: [0, 0, 1]
+
+  pinky_intermediate:
+    lower: 0
+    upper: 1.7
+    effort: 1
+    velocity: 0.5
+    origin: [0, 0.032041, 0, 0, 0, 0]
+    axis: [0, 0, 1]
+    mimic: "pinky_proximal"
+    mimic_multiplier: 1
+
+# Tip joint origins (relative to parent link)
+tip_origins:
+  thumb_tip: [0.020, 0.012, -0.0020, 0, 0, 0]
+  index_tip: [-0.005, 0.0433132, -0.005, 0, 0, 0]
+  middle_tip: [-0.005, 0.0466043, -0.005, 0, 0, 0]
+  ring_tip: [-0.005, 0.0433541, -0.005, 0, 0, 0]
+  pinky_tip: [-0.005, 0.0362776, -0.005, 0, 0, 0] 
