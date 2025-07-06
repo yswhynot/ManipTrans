@@ -9,9 +9,11 @@ hand_side: "R_"
 
 # Box dimensions for each link type
 box_dimensions:
+  link_width: 0.01
+  link_height: 0.01
+
   # Base link (hand base)
   hand_base:
-    width: 0.01    # x dimension
     length: 0.1    # y dimension  
     height: 0.05   # z dimension
     mass: 0.14143
@@ -20,67 +22,49 @@ box_dimensions:
 
   # Thumb links
   thumb_proximal_base:
-    width: 0.01
     length: 0.016787272024066328
-    height: 0.01
     mass: 0.0018869
     visual_origin: [0.0001, 0.0109, -0.0014, 0.0000, 0.5836, 3.8217]
 
   thumb_proximal:
-    width: 0.01
     length: 0.056006380966814845
-    height: 0.01
     mass: 0.0066075
     visual_origin: [0.0252, 0.0133, -0.0049, 0.0000, 0.0143, 2.2357]
 
   thumb_intermediate:
-    width: 0.01
     length: 0.02268404373122217
-    height: 0.01
     mass: 0.0037847
     visual_origin: [0.0125, 0.0004, -0.0047, 0.0000, 0.0529, 2.0357]
 
   thumb_distal:
-    width: 0.01
     length: 0.023078574950895474
-    height: 0.01
     mass: 0.0033441
     visual_origin: [0.0125, 0.0037, -0.0035, 0.0000, 0.2626, 2.3466]
 
   # Finger proximal links (index, middle, ring, pinky)
   finger_proximal:
-    width: 0.01
     length: 0.03214803454972014
-    height: 0.01
     mass: 0.0042403
     visual_origin: [-0.0050, 0.0161, -0.0050, 0, 0, 0]
 
   # Finger intermediate links
   index_intermediate:
-    width: 0.01
     length: 0.04379631116135011
-    height: 0.01
     mass: 0.0045683
     visual_origin: [-0.0050, 0.0219, -0.0050, 0, 0, 0]
 
   middle_intermediate:
-    width: 0.01
     length: 0.04706433173139187
-    height: 0.01
     mass: 0.0050396
     visual_origin: [-0.0050, 0.0235, -0.0050, 0, 0, 0]
 
   ring_intermediate:
-    width: 0.01
     length: 0.04379633523392682
-    height: 0.01
     mass: 0.0045683
     visual_origin: [-0.0050, 0.0219, -0.0050, 0, 0, 0]
 
   pinky_intermediate:
-    width: 0.01
     length: 0.03671467408620836
-    height: 0.01
     mass: 0.0035996
     visual_origin: [-0.0050, 0.0184, -0.0050, 0, 0, 0]
 

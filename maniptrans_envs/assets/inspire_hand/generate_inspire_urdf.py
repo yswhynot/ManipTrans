@@ -66,11 +66,19 @@ def create_inertia_element(inertia: List[float]) -> ET.Element:
     )
 
 
-def create_link_element(link_name: str, box_config: Dict[str, Any], hand_side: str) -> ET.Element:
+def create_link_element(link_name: str, box_config: Dict[str, Any], global_config: Dict[str, Any], hand_side: str) -> ET.Element:
     """Create a link element with box geometry."""
-    width = box_config['width']
+    # width = box_config['width']
+    # length = box_config['length']
+    # height = box_config['height']
+    width = global_config['link_width']
+    height = global_config['link_height']
+    if 'width' in box_config:
+        width = box_config['width']
+    if 'height' in box_config:
+        height = box_config['height']
+
     length = box_config['length']
-    height = box_config['height']
     mass = box_config['mass']
     visual_origin = box_config['visual_origin']
     
@@ -97,8 +105,8 @@ def create_link_element(link_name: str, box_config: Dict[str, Any], hand_side: s
     geometry = ET.SubElement(visual, 'geometry')
     ET.SubElement(geometry, 'box', size=f"{width} {length} {height}")
     
-    material = ET.SubElement(visual, 'material', name="")
-    ET.SubElement(material, 'color', rgba="0.1 0.1 0.1 1")
+    # material = ET.SubElement(visual, 'material', name="")
+    # ET.SubElement(material, 'color', rgba="0.1 0.1 0.1 1")
     
     # Collision element
     collision = ET.SubElement(link, 'collision')
@@ -120,8 +128,8 @@ def create_tip_link_element(tip_name: str, radius: float, hand_side: str) -> ET.
     geometry = ET.SubElement(visual, 'geometry')
     ET.SubElement(geometry, 'sphere', radius=str(radius))
     
-    material = ET.SubElement(visual, 'material', name="green")
-    ET.SubElement(material, 'color', rgba="0 1 0 1")
+    # material = ET.SubElement(visual, 'material', name="green")
+    # ET.SubElement(material, 'color', rgba="0 1 0 1")
     
     return link
 
@@ -223,7 +231,7 @@ def generate_urdf(config: Dict[str, Any]) -> ET.Element:
             robot.append(create_tip_link_element(link_name, tip_radius, hand_side))
         else:
             # This is a regular link with box geometry
-            robot.append(create_link_element(link_name, box_dimensions[box_type], hand_side))
+            robot.append(create_link_element(link_name, box_dimensions[box_type], box_dimensions, hand_side))
     
     # Define joint connections
     joint_connections = [

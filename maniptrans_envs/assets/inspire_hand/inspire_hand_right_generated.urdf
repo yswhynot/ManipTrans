@@ -11,9 +11,6 @@
       <geometry>
         <box size="0.01 0.1 0.05"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 -0.050000 0.000000" rpy="0.000000 0.000000 0.000000"/>
@@ -33,9 +30,6 @@
       <geometry>
         <box size="0.01 0.016787272024066328 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="0.000100 0.010900 -0.001400" rpy="0.000000 0.583600 3.821700"/>
@@ -55,9 +49,6 @@
       <geometry>
         <box size="0.01 0.056006380966814845 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="0.025200 0.013300 -0.004900" rpy="0.000000 0.014300 2.235700"/>
@@ -77,9 +68,6 @@
       <geometry>
         <box size="0.01 0.02268404373122217 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="0.012500 0.000400 -0.004700" rpy="0.000000 0.052900 2.035700"/>
@@ -99,9 +87,6 @@
       <geometry>
         <box size="0.01 0.023078574950895474 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="0.012500 0.003700 -0.003500" rpy="0.000000 0.262600 2.346600"/>
@@ -116,9 +101,6 @@
       <geometry>
         <sphere radius="0.007"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
     </visual>
   </link>
   <link name="R_index_proximal">
@@ -132,9 +114,6 @@
       <geometry>
         <box size="0.01 0.03214803454972014 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.016100 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -154,9 +133,6 @@
       <geometry>
         <box size="0.01 0.04379631116135011 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.021900 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -171,9 +147,6 @@
       <geometry>
         <sphere radius="0.007"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
     </visual>
   </link>
   <link name="R_middle_proximal">
@@ -187,9 +160,6 @@
       <geometry>
         <box size="0.01 0.03214803454972014 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.016100 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -209,9 +179,6 @@
       <geometry>
         <box size="0.01 0.04706433173139187 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.023500 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -226,9 +193,6 @@
       <geometry>
         <sphere radius="0.007"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
     </visual>
   </link>
   <link name="R_ring_proximal">
@@ -242,9 +206,6 @@
       <geometry>
         <box size="0.01 0.03214803454972014 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.016100 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -264,9 +225,6 @@
       <geometry>
         <box size="0.01 0.04379633523392682 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.021900 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -281,9 +239,6 @@
       <geometry>
         <sphere radius="0.007"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
     </visual>
   </link>
   <link name="R_pinky_proximal">
@@ -297,9 +252,6 @@
       <geometry>
         <box size="0.01 0.03214803454972014 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.016100 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -319,9 +271,6 @@
       <geometry>
         <box size="0.01 0.03671467408620836 0.01"/>
       </geometry>
-      <material name="">
-        <color rgba="0.1 0.1 0.1 1"/>
-      </material>
     </visual>
     <collision>
       <origin xyz="-0.005000 0.018400 -0.005000" rpy="0.000000 0.000000 0.000000"/>
@@ -336,9 +285,6 @@
       <geometry>
         <sphere radius="0.007"/>
       </geometry>
-      <material name="green">
-        <color rgba="0 1 0 1"/>
-      </material>
     </visual>
   </link>
   <joint name="R_thumb_proximal_yaw" type="revolute">
