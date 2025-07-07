@@ -1503,6 +1503,11 @@ def compute_imitation_reward(
     diff_obj_ang_vel = target_obj_ang_vel - current_obj_ang_vel
     reward_obj_ang_vel = torch.exp(-1 * diff_obj_ang_vel.abs().mean(dim=-1))
 
+    # Print object trajectory rewards (only for first environment to avoid spam)
+    if progress_buf[0] % 10 == 0:  # Print every 10 steps
+        print(f"Step {progress_buf[0]}: Object Rewards - Pos: {reward_obj_pos[0]:.4f}, Rot: {reward_obj_rot[0]:.4f}, Vel: {reward_obj_vel[0]:.4f}, AngVel: {reward_obj_ang_vel[0]:.4f}")
+        print(f"  Object Pos Diff: {diff_obj_pos_dist[0]:.4f}, Rot Angle: {diff_obj_rot_angle[0]:.4f}")
+
     reward_power = torch.exp(-10 * target_states["power"])
     reward_wrist_power = torch.exp(-2 * target_states["wrist_power"])
 
