@@ -126,3 +126,7 @@ debug_*
 inspire_hand_official.zip*
 assets/robotic_arm_package
 assets/robotic_arm_package/*
+
+data/** 
+!data/**/*.py
+!data/**/*.sh
