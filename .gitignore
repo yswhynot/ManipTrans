@@ -189,3 +189,7 @@ make*.py
 
 runs
 runs/*
+
+*.stl
+*.STL
+*.ply

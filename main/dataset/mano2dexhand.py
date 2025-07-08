@@ -105,6 +105,7 @@ class Mano2Dexhand:
         # asset_options.use_mesh_materials = True
         dexhand_asset = self.gym.load_asset(self.sim, asset_root, asset_file, asset_options)
 
+        print("file path: ", os.path.join(asset_root, asset_file))
         self.chain = pk.build_chain_from_urdf(open(os.path.join(asset_root, asset_file)).read())
         self.chain = self.chain.to(dtype=torch.float32, device=self.sim_device)
 

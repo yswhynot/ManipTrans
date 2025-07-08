@@ -124,14 +124,8 @@ def get_link_box_size_and_offset(link_name, joints, box_config):
             
             # Calculate offset as half the joint distance
             # offset = (direction * distance / 2).tolist()
-
-            # potential bug: the offset is not correct for right hand
             offset = - np.array(box_config['finger'])/2
-            # offset[1] = -distance / 2 # for left hand
-            if 'thumb' in link_name:
-                offset[1] = -distance / 2 # for right hand
-            else:
-                offset[1] = distance / 2 # for right hand
+            offset[1] = -distance / 2
 
             offset = offset.tolist()
     
@@ -241,14 +235,9 @@ def generate_urdf_with_boxes(input_urdf_path, output_urdf_path, box_config):
                 else:
                     xyz = np.array(xyz)
                     # offset the origin by half the box size in the sphere local frame
-                    # for left hand
-                    # xyz[0] -= 0.005
-                    # xyz[1] -= 0.004
-                    # xyz[2] += 0.003
-                    # for right hand
-                    xyz[0] += 0.005
-                    xyz[1] += 0.004
-                    xyz[2] -= 0.003
+                    xyz[0] -= 0.005
+                    xyz[1] -= 0.004
+                    xyz[2] += 0.003
                     origin.set('xyz', f'{xyz[0]:.4f} {xyz[1]:.4f} {xyz[2]:.4f}')
     
     # Write the modified URDF
@@ -286,8 +275,8 @@ if __name__ == "__main__":
         }
         
         curr_dir = os.path.dirname(os.path.abspath(__file__))
-        input_path = os.path.join(curr_dir, "orig_inspire_hand_right.urdf")
-        output_path = os.path.join(curr_dir, "inspire_hand_right.urdf")
+        input_path = os.path.join(curr_dir, "inspire_hand_left.urdf")
+        output_path = os.path.join(curr_dir, "inspire_hand_left_box.urdf")
         
         generate_urdf_with_boxes(input_path, output_path, box_config)
     else:
