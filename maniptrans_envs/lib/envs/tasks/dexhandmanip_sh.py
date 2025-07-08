@@ -869,33 +869,30 @@ class DexHandManipRHEnv(VecTask):
             self.dexhand.weight_idx,
         )
         
-        # Print object trajectory rewards (only for first environment to avoid spam)
+        # Print object trajectory rewards (only for environment with smallest combined difference to avoid spam)
         if self.progress_buf[0] % 10 == 0:
+            # Calculate object position and rotation differences for all environments
+            current_obj_pos = self.states["manip_obj_pos"]
+            target_obj_pos = target_state["manip_obj_pos"]
+            diff_obj_pos_dist = torch.norm(target_obj_pos - current_obj_pos, dim=-1)
+            
+            current_obj_quat = self.states["manip_obj_quat"]
+            target_obj_quat = target_state["manip_obj_quat"]
+            diff_obj_rot = quat_mul(target_obj_quat, quat_conjugate(current_obj_quat))
+            diff_obj_rot_angle = quat_to_angle_axis(diff_obj_rot)[0]
+            
+            # Find environment with smallest combined difference
+            combined_diff = diff_obj_pos_dist + torch.abs(diff_obj_rot_angle)
+            best_env_idx = torch.argmin(combined_diff)
+            
             print(
-                "Step {}: Object Rewards - Pos: {:.4f}, Rot: {:.4f}, Vel: {:.4f}, AngVel: {:.4f}"
+                "Step {} (Env {}): Object Pos Diff: {:.4f}, Rot Angle: {:.4f}, Combined: {:.4f}"
                 .format(
                     self.progress_buf[0].item(),
-                    self.reward_dict["reward_obj_pos"][0].item(),
-                    self.reward_dict["reward_obj_rot"][0].item(),
-                    self.reward_dict["reward_obj_vel"][0].item(),
-                    self.reward_dict["reward_obj_ang_vel"][0].item(),
-                )
-            )
-            # Calculate object position and rotation differences for display
-            current_obj_pos = self.states["manip_obj_pos"][0]
-            target_obj_pos = target_state["manip_obj_pos"][0]
-            diff_obj_pos_dist = torch.norm(target_obj_pos - current_obj_pos).item()
-            
-            current_obj_quat = self.states["manip_obj_quat"][0]
-            target_obj_quat = target_state["manip_obj_quat"][0]
-            diff_obj_rot = quat_mul(target_obj_quat, quat_conjugate(current_obj_quat))
-            diff_obj_rot_angle = quat_to_angle_axis(diff_obj_rot)[0].item()
-            
-            print(
-                "  Object Pos Diff: {:.4f}, Rot Angle: {:.4f}"
-                .format(
-                    diff_obj_pos_dist,
-                    diff_obj_rot_angle,
+                    best_env_idx.item(),
+                    diff_obj_pos_dist[best_env_idx].item(),
+                    diff_obj_rot_angle[best_env_idx].item(),
+                    combined_diff[best_env_idx].item(),
                 )
             )
         
