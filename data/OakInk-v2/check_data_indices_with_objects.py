@@ -6,9 +6,10 @@ Script to check which objects each data index uses and verify if mesh files exis
 import os
 import pickle
 import json
+import argparse
 from pathlib import Path
 
-def check_data_indices_with_objects():
+def check_data_indices_with_objects(show_only_completed=False):
     """
     Check which objects each data index uses and verify mesh file existence
     """
@@ -65,62 +66,73 @@ def check_data_indices_with_objects():
                         seg_pair_def = eval(k)
                         stages_info[seg_pair_def] = v
             
-            print(f"{i:3d}. {five_digit_hash} -> {filename}")
-            print(f"     Objects: {object_list}")
-            
-            # Check mesh files for each object
+            # Check mesh files for each object (silently)
             mesh_status = []
             for obj in object_list:
-                obj_mesh_path = object_dir / obj / "scan.obj"
-                obj_ply_path = object_dir / obj / "scan.ply"
-                coacd_obj_path = coacd_dir / obj / "scan.obj"
-                coacd_ply_path = coacd_dir / obj / "scan.ply"
-                urdf_path = urdf_dir / obj / "scan.urdf"
+                # Check for any mesh files in the object directory
+                obj_dir = object_dir / obj
+                coacd_obj_dir = coacd_dir / obj
+                urdf_dir_obj = urdf_dir / obj
+                
+                # Find original PLY files
+                original_ply_files = list(obj_dir.glob("*.ply"))
+                original_ply_exists = len(original_ply_files) > 0
+                
+                # Find COACD OBJ files
+                coacd_obj_files = list(coacd_obj_dir.glob("*.obj"))
+                coacd_obj_exists = len(coacd_obj_files) > 0
+                
+                # Find COACD PLY files
+                coacd_ply_files = list(coacd_obj_dir.glob("*.ply"))
+                coacd_ply_exists = len(coacd_ply_files) > 0
+                
+                # Find URDF files
+                urdf_files = list(urdf_dir_obj.glob("*.urdf"))
+                urdf_exists = len(urdf_files) > 0
                 
                 status = {
                     'obj': obj,
-                    'original_obj': obj_mesh_path.exists(),
-                    'original_ply': obj_ply_path.exists(),
-                    'coacd_obj': coacd_obj_path.exists(),
-                    'coacd_ply': coacd_ply_path.exists(),
-                    'urdf': urdf_path.exists()
+                    'original_ply': original_ply_exists,
+                    'coacd_obj': coacd_obj_exists,
+                    'coacd_ply': coacd_ply_exists,
+                    'urdf': urdf_exists
                 }
                 mesh_status.append(status)
-                
-                print(f"       {obj}:")
-                print(f"         Original OBJ: {'✓' if status['original_obj'] else '✗'}")
-                print(f"         Original PLY: {'✓' if status['original_ply'] else '✗'}")
-                print(f"         COACD OBJ: {'✓' if status['coacd_obj'] else '✗'}")
-                print(f"         COACD PLY: {'✓' if status['coacd_ply'] else '✗'}")
-                print(f"         URDF: {'✓' if status['urdf'] else '✗'}")
             
-            # Check if all required files exist
-            all_files_exist = all(
+            # Check if ALL objects have required files
+            all_objects_ready = all(
                 status['coacd_obj'] and status['urdf'] 
                 for status in mesh_status
             )
             
-            if all_files_exist:
+            if all_objects_ready:
                 valid_indices.append(five_digit_hash)
-                print(f"     Status: ✓ READY (all files exist)")
+                print(f"{i:3d}. {five_digit_hash} -> {filename}")
+                print(f"     Objects: {object_list}")
+                
+                # Show details for completed sequences
+                for obj in object_list:
+                    obj_status = next(s for s in mesh_status if s['obj'] == obj)
+                    print(f"       {obj}: ✓ READY")
+                
+                # Show stages info
+                if stages_info:
+                    print(f"     Stages: {len(stages_info)} stages available")
+                    for stage_idx, (stage_range, stage_info) in enumerate(stages_info.items()):
+                        stage_objects = stage_info.get("obj_list_rh", [])
+                        print(f"       Stage {stage_idx}: {stage_objects}")
+                
+                print()
             else:
-                print(f"     Status: ✗ INCOMPLETE (missing files)")
-            
-            # Show stages info
-            if stages_info:
-                print(f"     Stages: {len(stages_info)} stages available")
-                for stage_idx, (stage_range, stage_info) in enumerate(stages_info.items()):
-                    stage_objects = stage_info.get("obj_list_rh", [])
-                    print(f"       Stage {stage_idx}: {stage_objects}")
-            
-            print()
+                # Show simple line for incomplete sequences
+                print(f"  {five_digit_hash}: incomplete")
             
         except Exception as e:
-            print(f"{i:3d}. {five_digit_hash} -> {filename}")
+            print(f"\n{i:3d}. {five_digit_hash} -> {filename}")
             print(f"     [ERROR] Could not load: {e}")
             print()
     
-    print("=" * 80)
+    print("\n" + "=" * 80)
     print(f"Summary: {len(valid_indices)} indices are ready for use")
     print("\nReady indices:")
     for idx in valid_indices:
@@ -133,4 +145,9 @@ def check_data_indices_with_objects():
         print(f"python main/dataset/mano2dexhand.py --data_idx {valid_indices[0]}@0 --side right --dexhand inspire --headless --iter 7000")
 
 if __name__ == "__main__":
-    check_data_indices_with_objects() 
+    parser = argparse.ArgumentParser(description="Check data indices with their objects and file status")
+    parser.add_argument("--completed-only", action="store_true", 
+                       help="Show only completed indices (all files exist)")
+    args = parser.parse_args()
+    
+    check_data_indices_with_objects(show_only_completed=args.completed_only) 
