@@ -183,6 +183,9 @@ class DexHandManipBiHEnv(VecTask):
         if self.cfg["env"]["dexhand"] == "inspire":
             default_pose[8] = 0.3
             default_pose[9] = 0.01
+        elif self.cfg["env"]["dexhand"] == "inspire_new":
+            default_pose[8] = 0.3
+            default_pose[9] = 0.01
         self.dexhand_rh_default_dof_pos = torch.tensor(default_pose, device=self.sim_device)
         self.dexhand_lh_default_dof_pos = torch.tensor(default_pose, device=self.sim_device)  # ? TODO check this
         # self.dexhand_rh_default_dof_pos = torch.tensor([-3.5322e-01,  -0.100e-01,  3.2278e-01, -2.51e+00,  1.6036e-01,

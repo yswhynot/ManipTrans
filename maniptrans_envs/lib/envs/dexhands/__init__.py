@@ -1,5 +1,6 @@
 from .base import DexHand
 from .inspire import Inspire
+from .inspire_new import InspireNew
 
 import os
 from .factory import DexHandFactory

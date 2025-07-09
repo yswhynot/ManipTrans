@@ -155,6 +155,9 @@ class DexHandImitatorRHEnv(VecTask):
         if self.cfg["env"]["dexhand"] == "inspire":
             default_pose[8] = 0.3
             default_pose[9] = 0.01
+        elif self.cfg["env"]["dexhand"] == "inspire_new":
+            default_pose[8] = 0.3
+            default_pose[9] = 0.01
         self.dexhand_default_dof_pos = torch.tensor(default_pose, device=self.sim_device)
 
         # load BPS model
